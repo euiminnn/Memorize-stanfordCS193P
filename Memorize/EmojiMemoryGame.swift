@@ -11,16 +11,21 @@ import SwiftUI
 //    return "🥰"
 //}
 
-class EmojiMemoryGame {
+class EmojiMemoryGame: ObservableObject {
     static let emojis = ["✈️", "🚄", "🚀", "🏍", "🚕", "🚌", "🚙", "🚲", "🛴", "🛶", "🚁", "⛴", "🛻", "🚔", "🛺", "🚒", "🛸", "⛵️", "🚃", "🚂", "🚍", "🚚", "🚡", "🛵"]
     
     static func createMemoryGame() -> MemoryGame<String> {
-        MemoryGame<String>(numberOfPairsOfCards: 4) { pairIndex in EmojiMemoryGame.emojis[pairIndex]
+        MemoryGame<String>(numberOfPairsOfCards: 3) { pairIndex in EmojiMemoryGame.emojis[pairIndex]
         }
     }
-    private var model: MemoryGame<String> = EmojiMemoryGame.createMemoryGame()
+    @Published private var model: MemoryGame<String> = EmojiMemoryGame.createMemoryGame()  //initialize
     
     var cards: Array<MemoryGame<String>.Card> {
         return model.cards
+    }
+    
+    func choose(_ card: MemoryGame<String>.Card) {
+        //objectWillChange.send()       //Use this or @Published
+        model.choose(card)
     }
 }
