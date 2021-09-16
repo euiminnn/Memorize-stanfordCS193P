@@ -7,23 +7,42 @@
 
 import Foundation
 
-struct MemoryGame<CardContent> {
+struct MemoryGame<CardContent> where CardContent: Equatable{ //when can't use '=='
     private(set) var cards: Array<Card>
     
+    private var indexOfTheOnlyFaceUpCard: Int?
+    
     mutating func choose(_ card: Card) {
-        let chosenIndex = index(of: card)
-        cards[chosenIndex].isFaceUp.toggle()
+//        if let chosenIndex = index(of: card) {
+        if let chosenIndex = cards.firstIndex(where: {$0.id == card.id}),
+           !cards[chosenIndex].isFaceUp,
+           !cards[chosenIndex].isMatched {      //index 함수 사용 대신 이렇게
+            if let potentialMatchIndex = indexOfTheOnlyFaceUpCard {
+                if cards[chosenIndex].content0 == cards[potentialMatchIndex].content0 {
+                    cards[chosenIndex].isMatched = true
+                    cards[potentialMatchIndex].isMatched = true
+                }
+                indexOfTheOnlyFaceUpCard = nil
+            } else {
+                for index in 0..<cards.count {
+                    cards[index].isFaceUp = false
+                }
+                indexOfTheOnlyFaceUpCard = chosenIndex
+            }
+            cards[chosenIndex].isFaceUp.toggle()
+        }
+
         print("\(cards)")
     }
     
-    func index(of: Card) -> Int {
-        for index in 0..<cards.count {
-            if cards[index].id == of.id {
-                return index
-            }
-        }
-        return 0
-    }
+//    func index(of: Card) -> Int? {
+//        for index in 0..<cards.count {
+//            if cards[index].id == of.id {
+//                return index
+//            }
+//        }
+//        return nil
+//    }
     
     
     
@@ -40,7 +59,7 @@ struct MemoryGame<CardContent> {
     struct Card: Identifiable {
         var id: Int
         
-        var isFaceUp: Bool = true
+        var isFaceUp: Bool = false
         var isMatched: Bool = false
         var content0: CardContent
     }
