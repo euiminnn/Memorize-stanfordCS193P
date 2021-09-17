@@ -12,20 +12,27 @@ import SwiftUI
 //}
 
 class EmojiMemoryGame: ObservableObject {
-    static let emojis = ["✈️", "🚄", "🚀", "🏍", "🚕", "🚌", "🚙", "🚲", "🛴", "🛶", "🚁", "⛴", "🛻", "🚔", "🛺", "🚒", "🛸", "⛵️", "🚃", "🚂", "🚍", "🚚", "🚡", "🛵"]
+    typealias Card = MemoryGame<String>.Card
+    private static let emojis = ["✈️", "🚄", "🚀", "🏍", "🚕", "🚌", "🚙", "🚲", "🛴", "🛶", "🚁", "⛴", "🛻", "🚔", "🛺", "🚒", "🛸", "⛵️", "🚃", "🚂", "🚍", "🚚", "🚡", "🛵"]
     
-    static func createMemoryGame() -> MemoryGame<String> {
+    private static func createMemoryGame() -> MemoryGame<String> {
         MemoryGame<String>(numberOfPairsOfCards: 3) { pairIndex in EmojiMemoryGame.emojis[pairIndex]
         }
     }
-    @Published private var model: MemoryGame<String> = EmojiMemoryGame.createMemoryGame()  //initialize
+    @Published private var model = createMemoryGame()  //initialize
     
-    var cards: Array<MemoryGame<String>.Card> {
+    var cards: Array<Card> {
         return model.cards
     }
     
-    func choose(_ card: MemoryGame<String>.Card) {
+    func choose(_ card: Card) {
         //objectWillChange.send()       //Use this or @Published
         model.choose(card)
+    }
+}
+
+struct EmojiMemoryGame_Previews: PreviewProvider {
+    static var previews: some View {
+        /*@START_MENU_TOKEN@*/Text("Hello, World!")/*@END_MENU_TOKEN@*/
     }
 }
