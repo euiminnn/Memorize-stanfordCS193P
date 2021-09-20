@@ -10,7 +10,32 @@ import Foundation
 struct MemoryGame<CardContent> where CardContent: Equatable{ //when can't use '=='
     private(set) var cards: Array<Card>
     
-    private var indexOfTheOnlyFaceUpCard: Int?
+    private var indexOfTheOnlyFaceUpCard: Int? {
+        get {
+            
+            let faceUpCardIndices = cards.indices.filter({index in cards[index].isFaceUp})
+//            var faceUpCardIndices = [Int]()
+//            for index in cards.indices {
+//                if cards[index].isFaceUp {
+//                    faceUpCardIndices.append(index)
+//                }
+//            }
+            if faceUpCardIndices.count == 1 {
+                return faceUpCardIndices[0]
+            } else {
+                return nil
+            }
+        }
+        set {
+            for index in 0..<cards.count {
+                if index != newValue {
+                    cards[index].isFaceUp = false
+                } else {
+                    cards[index].isFaceUp = false
+                }
+            }
+        }
+    }
     
     mutating func choose(_ card: Card) {
 //        if let chosenIndex = index(of: card) {
@@ -22,14 +47,12 @@ struct MemoryGame<CardContent> where CardContent: Equatable{ //when can't use '=
                     cards[chosenIndex].isMatched = true
                     cards[potentialMatchIndex].isMatched = true
                 }
-                indexOfTheOnlyFaceUpCard = nil
+                cards[chosenIndex].isFaceUp = true
+
             } else {
-                for index in 0..<cards.count {
-                    cards[index].isFaceUp = false
-                }
+
                 indexOfTheOnlyFaceUpCard = chosenIndex
             }
-            cards[chosenIndex].isFaceUp.toggle()
         }
 
     }
@@ -58,7 +81,7 @@ struct MemoryGame<CardContent> where CardContent: Equatable{ //when can't use '=
     struct Card: Identifiable {
         var id: Int
         
-        var isFaceUp = false
+        var isFaceUp = true
         var isMatched = false
         var content0: CardContent
     }
