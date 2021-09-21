@@ -14,12 +14,7 @@ struct MemoryGame<CardContent> where CardContent: Equatable{ //when can't use '=
         get {
             
             let faceUpCardIndices = cards.indices.filter({index in cards[index].isFaceUp})
-//            var faceUpCardIndices = [Int]()
-//            for index in cards.indices {
-//                if cards[index].isFaceUp {
-//                    faceUpCardIndices.append(index)
-//                }
-//            }
+
             if faceUpCardIndices.count == 1 {
                 return faceUpCardIndices[0]
             } else {
