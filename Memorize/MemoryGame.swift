@@ -11,24 +11,8 @@ struct MemoryGame<CardContent> where CardContent: Equatable{ //when can't use '=
     private(set) var cards: Array<Card>
     
     private var indexOfTheOnlyFaceUpCard: Int? {
-        get {
-            
-            let faceUpCardIndices = cards.indices.filter({index in cards[index].isFaceUp})
-
-            if faceUpCardIndices.count == 1 {
-                return faceUpCardIndices[0]
-            } else {
-                return nil
-            }
-        }
-        set {
-            for index in 0..<cards.count {
-                if index != newValue {
-                    cards[index].isFaceUp = false
-                } else {
-                    cards[index].isFaceUp = false
-                }
-            }
+        get { cards.indices.filter({ cards[$0].isFaceUp }).oneAndOnly }
+        set { cards.indices.forEach { cards[$0].isFaceUp = ($0 == newValue) }
         }
     }
     
@@ -76,8 +60,18 @@ struct MemoryGame<CardContent> where CardContent: Equatable{ //when can't use '=
     struct Card: Identifiable {
         var id: Int
         
-        var isFaceUp = true
+        var isFaceUp = false
         var isMatched = false
         var content0: CardContent
+    }
+}
+
+extension Array {
+    var oneAndOnly: Element? {
+        if count == 1 {
+            return first
+        } else {
+            return nil
+        }
     }
 }
